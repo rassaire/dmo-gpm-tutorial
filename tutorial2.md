@@ -6,7 +6,7 @@ We need to learn how to defined them and how minipulate point positions. We intr
 
 The following package needed to define data structure are imported
 ```Scala
-import multobjectmodels.ShapeAndPoseVector
+import ShapeAndPoseModels.ShapeAndPoseVector
 import scalismo.geometry.{EuclideanVector, Point3D, _3D}
 ```
 
