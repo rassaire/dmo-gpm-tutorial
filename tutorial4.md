@@ -79,6 +79,7 @@ Let us load (and visualize) a set of humerus meshes based on which we would like
 val shapeAndPoseModel: ShapeAndPosePDM[TriangleMesh] = ShapeAndPosePDM(defFields,singleExpLog)
 ```
 ## Single shape and pose model sampling
+
  We can retrieve random samples of meshes and rotation centers from the model by calling sample on the Gaussian process:
  
 ```Scala
