@@ -92,9 +92,8 @@ val (alignedMeshes, alignedRotCenters, meshViews, rotCenterViews) = for (i<- 0 t
   -->
  Exercise: find the rotation angles (Euler's angles) of some humeri (hemeri brought to the reference frame) with respect to the first humerus mesh in the dataset.
 ## Computing logarithmic functions from data
- As with [Single shape and pose models] (tutorial4.md), to study shape variations we need to extract shape and pose variations. This is done by selecting two of the meshes (first and second objects) as references to create [Multiple Object Structures] (tutorial1.md), and then using the reference to calculate the [Logarithmic Mapping] (tutorial3.md). The logarithmic map is used to compute a sequence of shared deformation fields (containing the shape and posture of both objects) over which the Gaussian process will be computed. This is done simply by calculating a logarithm of the deformation fields for the MultibodyObject[_3D, TriangleMesh] structures created from the rest of the datasets.
+ As with [Single shape and pose models](tutorial4.md), to study shape variations we need to extract shape and pose variations. This is done by selecting two of the meshes (first and second objects) as references to create [Multiple Object Structures](tutorial1.md), and then using the reference to calculate the [Logarithmic Mapping](tutorial3.md). The logarithmic map is used to compute a sequence of shared deformation fields (containing the shape and posture of both objects) over which the Gaussian process will be computed. This is done simply by calculating a logarithm of the deformation fields for the MultibodyObject[_3D, TriangleMesh] structures created from the rest of the datasets.
 
-Translated with www.DeepL.com/Translator (free version)
  
  ```Scala
    val firstObjectReference=dataFiles.head._1(0)
