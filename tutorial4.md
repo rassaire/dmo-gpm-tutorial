@@ -19,7 +19,7 @@ As in the previous tutorials, we start by importing some commonly used objects a
   val ui = ScalismoUI()
 ```
 ## Loading and preprocessing a dataset:
-Let us load ([download here](https://www.dropbox.com/s/t592zkjg9tu06xz/LollipopData.zip?dl=0)) and visualize a set of objects meshes based on which we would like to model shape and pose variation:
+Let us load ([download here](https://www.dropbox.com/s/rnct1inun112c3c/LollipopData.zip?dl=0)) and visualize a set of objects meshes based on which we would like to model shape and pose variation:
 ```Scala
  val dataGroup = ui.createGroup("datasets")
 
