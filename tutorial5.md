@@ -2,7 +2,7 @@
  
 # Building shape and pose models for multple object family
 The objective of this tutorial is to learn how to build a shape and pose model for several families of objects from matching meshes. Correspondence means that objects of the same family have been registered using the same reference mesh and that each object is at its original spatial position (position from the acquisition).
-#Preparation
+# Preparation
 As in the previous tutorials, we start by importing some commonly used objects and initializing the system.
 ```Scala
 import ShapeAndPoseModels._
