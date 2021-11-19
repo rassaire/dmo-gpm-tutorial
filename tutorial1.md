@@ -21,7 +21,7 @@ Meshes can be read from a file using the method readMesh from the MeshIO:
 Let us now define our first data structure called Domainwithposeparameters. This data structure consists of a discrete domain (triangle mesh, tetrahedral mesh or unstructured point), a rotation criterion and a neutral point. The rotation criterion is the point that is invariant under the translation of the object. The centre of rotation depends on the object, e.g. for the humerus it is at the head of the humerus and is calculated using the sphere fitting method.  For the scapula it is on the glenoid surface and is also calculated using the sphere fitting method. The neutral point is used to track the rotation center when aligning two objects with the invariant point bieng the center of the mass. It is therefore only used when computing the object, for an object it is the same as the centre of rotation. The rotation points are read from the landmark files.
 
 ```Scala
-    val RotCent = LandmarkIO.readLandmarksJson[_3D](new File("path/rotcenter.json")).get
+    val RotCent = LandmarkIO.readLandmarksJson[_3D](new File("LollipopData/rotation_centers_first_object/rotCenterObj1 0.json")).get
     val DomainWithPoseParam=DomainWithPoseParameters(TriangleMesh,
       RotCent.head.point,
       RotCent.head.point
