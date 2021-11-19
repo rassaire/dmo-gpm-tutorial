@@ -15,8 +15,8 @@ import scalismo.transformations.Transformation
 ## Logand Exp mappings for DomainWithPoseparamter
 Let's start by calling the DomainWithPoseparamter from [tutorial 1](tutorial1) again, which we now call targetDomainWithPoseParam. 
 ```Scala
-    val triangleMesh = MeshIO.readMesh(new File("path/trianglemesh.stl")).get
-    val RotCent = LandmarkIO.readLandmarksJson[_3D](new File("path/rotcenter.json")).get
+    val triangleMesh = MeshIO.readMesh(new File("LollipopData/first_objects/Synth1_30_0.stl")).get
+    val RotCent = LandmarkIO.readLandmarksJson[_3D](new File("LollipopData/rotation_centers_first_object/rotCenterObj1 0.json")).get
 
     val targetDomainWithPoseParam=DomainWithPoseParameters(triangleMesh,
       RotCent.head.point,
@@ -25,8 +25,8 @@ Let's start by calling the DomainWithPoseparamter from [tutorial 1](tutorial1) a
 ```
 Let's laod another DomainWithPOseparamter, which we call referenceDomainWithPoseParam
 ```Scala
-    val referenceMesh:TriangleMesh[_3D] = MeshIO.readMesh(new File("path/referencemesh.stl")).get
-    val referenceRotCent:Seq[Landmark[_3D]] = LandmarkIO.readLandmarksJson[_3D](new File("path/refrotcenter.json")).get
+    val referenceMesh:TriangleMesh[_3D] = MeshIO.readMesh(new File("LollipopData/first_objects/Synth1_30_0.stl")).get
+    val referenceRotCent:Seq[Landmark[_3D]] = LandmarkIO.readLandmarksJson[_3D](new File("LollipopData/rotation_centers_first_object/rotCenterObj1 0.json")).get
 
     val referenceDomainWithPoseParam: DomainWithPoseParameters[_3D, TriangleMesh]=DomainWithPoseParameters(referenceMesh,
       referenceRotCent.head.point,
