@@ -24,11 +24,11 @@ Let's load (and visualise) a set of first and second lollipop meshes from which 
 ```Scala
 val dataGroup = ui.createGroup("datasets")
 
-  val firstObjectMeshFiles = new java.io.File("").listFiles
-  val secondObjectMeshFiles = new java.io.File("").listFiles
+  val firstObjectMeshFiles = new java.io.File("LollipopData/first_objects/").listFiles
+  val secondObjectMeshFiles = new java.io.File("LollipopData/second_objects/").listFiles
 
-  val firstObjectRotationCenterFiles = new java.io.File("").listFiles
-  val secondObjectRotationCenterFiles = new java.io.File("").listFiles
+  val firstObjectRotationCenterFiles = new java.io.File("LollipopData/rotation_centers_first_object/").listFiles
+  val secondObjectRotationCenterFiles = new java.io.File("LollipopData/rotation_centers_second_object/").listFiles
 
   val dataFiles = for (i<- 0 to firstObjectMeshFiles.size-1) yield {
     val firstObjectMesh = MeshIO.readMesh(firstObjectMeshFiles(i)).get
