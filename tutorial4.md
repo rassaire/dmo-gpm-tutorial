@@ -23,25 +23,26 @@ Let us load (and visualize) a set of humerus meshes based on which we would like
 ```Scala
  val dataGroup = ui.createGroup("datasets")
 
- val meshFiles = new java.io.File("path/humeri/").listFiles
- val rotationCenterFiles = new java.io.File("path/humeri/").listFiles
+   val meshFiles = new java.io.File("LollipopData/second_objects/").listFiles
+    val rotationCenterFiles = new java.io.File("LollipopData/rotation_centers_second_object/").listFiles
 
- val dataFiles = for (i<- 0 to meshFiles.size-1) yield {
-    val mesh = MeshIO.readMesh(meshFiles(i)).get
-    val rotcent=LandmarkIO.readLandmarksJson[_3D](rotationCenterFiles(i)).get
-    val meshView = ui.show(dataGroup, mesh, "mesh")
-    val rotCentView = ui.show(dataGroup, mesh, "mesh")
-      (mesh, rotcent, meshView, rotCentView) // return a tuple of the mesh and roation centers with their associated view
+
+  val dataFiles = for (i<- 0 to meshFiles.size-1) yield {
+      val mesh = MeshIO.readMesh(meshFiles(i)).get
+      val rotcent=LandmarkIO.readLandmarksJson[_3D](rotationCenterFiles(i)).get
+      val meshView = ui.show(dataGroup, mesh, "mesh"+i)
+      val rotCentView = ui.show(dataGroup, mesh, "rotCent"+i)
+      (mesh, rotcent, meshView, rotCentView) // return a tuple of the mesh and rotation centers with their associated view
     }
 ```
- You can see that the meshes are at different positions in space, these positions are their positions relative to the acquisition. These meshes are in correspondence. This means that for every point on one of the humeri meshes, we can identify the corresponding point on other meshes. Corresponding points are identified by the same point id. You also see that the meshes are at different positions in space, these postion are their position frorm the acquisition. 
+ You can see that the meshes are at different positions in space and they are in correspondence. This means that for each point on one of the second lollipop objects meshes, we can identify the corresponding point on the other meshes. The corresponding points are identified by the same point identifier. 
  
  Exercise: find the rotation angles of some meshes with respect to the fist meshes in the dataset.
 ## Building logarithmic functions from data
- In order to study shape variations, we need to factorisevariations due shape and the from the ones due to pose (rotation and translation). This is achiveved by selecting one of the meshes as a reference to create a [DomainWithPoseParamter](tutorial1.md), then used the reference to compute the [logarithimc mapping](tutorial3.md). The logaritmic map use to compute a seqquence of deforromation fields over which the Gaussian proces will be computed. This is simply done by computing a logarithmin defromation fields  for the [DomainWithPoseParamter](tutorial1.md) created from the rest of the datasets.
+ In order to study shape variations, we need to factor the shape variations and the pose variations (rotation and translation). This is done by selecting one of the meshes as a reference to create a [DomainWithPoseParamter](tutorial1.md), and then using the reference to compute the [logarithmic mapping](tutorial3.md). The logarithmic map is used to compute a sequence of deformation fields on which the Gaussian process will be computed. This is done simply by computing a logarithm of the deformation fields for the [DomainWithPoseParamter](tutorial1.md) created from the rest of the datasets.
  
  ```Scala
-   val reference = dataFiles.head._1
+  val reference = dataFiles.head._1
     val refRotCent=dataFiles.head._2
 
 
@@ -50,21 +51,21 @@ Let us load (and visualize) a set of humerus meshes based on which we would like
       Translation(EuclideanVector3D(0.0, 0.1, 0.0)).apply(refRotCent.head.point)
     )
 
-  val singleExpLog=SinglePoseExpLogMapping(referenceDomainWithPoseParam)
+    val singleExpLog=SinglePoseExpLogMapping(referenceDomainWithPoseParam)
 
-  val defFields = for (i <- 0 to dataFiles.size - 1) yield {
+    val defFields = for (i <- 0 to dataFiles.size - 1) yield {
 
-    val targDomainWithPoseParam=DomainWithPoseParameters(dataFiles(i)._1,
-      dataFiles(i)._2.head.point,
-      dataFiles(i)._2.head.point
-    )
+      val targDomainWithPoseParam=DomainWithPoseParameters(dataFiles(i)._1,
+        dataFiles(i)._2.head.point,
+        dataFiles(i)._2.head.point
+      )
 
-    val df=DiscreteField[_3D, ({ type T[D] = DomainWithPoseParameters[D, TriangleMesh] })#T, EuclideanVector[_3D]](referenceDomainWithPoseParam,
-      referenceDomainWithPoseParam.pointSet.pointsWithId.toIndexedSeq.map(pt =>targDomainWithPoseParam.pointSet.point(pt._2) - pt._1))
+      val df=DiscreteField[_3D, ({ type T[D] = DomainWithPoseParameters[D, TriangleMesh] })#T, EuclideanVector[_3D]](referenceDomainWithPoseParam,
+        referenceDomainWithPoseParam.pointSet.pointsWithId.toIndexedSeq.map(pt =>targDomainWithPoseParam.pointSet.point(pt._2) - pt._1))
 
-    singleExpLog.logMappingSingleD(df)
+      singleExpLog.logMappingSingleDomain(df)
 
-  }
+    }
  ```
    Note that the deformation fields can be be interpolated through nearest-neighbourhood interpolation to make sure that they are defined on all the points of the reference mesh. 
   ```Scala
