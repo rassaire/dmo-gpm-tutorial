@@ -1,7 +1,7 @@
 # Data Structures
 The data structures we are talking about are the multibody object structure and the domain with pose parameters. 
 These data structures can be defined from the basic mesh structures, which are triangular and tetrahedral meshes.
-Or they can simply be unstructured points defined from point clouds. The zip file containing the lollipops (triangular meshes) used in the tutorials can be found in [Data](https://www.dropbox.com/s/t592zkjg9tu06xz/LollipopData.zip?dl=0).
+Or they can simply be unstructured points defined from point clouds. The zip file containing the lollipops (triangular meshes) used in the tutorials can be found in [Data](https://www.dropbox.com/s/rnct1inun112c3c/LollipopData.zip?dl=0).
 
 The following package needed to define data structure are imported 
 ```Scala
