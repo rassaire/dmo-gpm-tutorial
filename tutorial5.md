@@ -22,7 +22,7 @@ implicit val rng = scalismo.utils.Random(42)
 val ui = ScalismoUI()
 ```
 ## Loading and preprocessing a dataset:
-Let's load (and visualise) a set of humerus and scapula meshes from which we wish to model variations in shape and pose. We are interested in the shoulder joint, but the framework works with any joint (object complex) with a finite number of objects:
+Let's load (and visualise) a set of first and second lollipop meshes from which we want to model variations in shape and pose. We are interested in the lollipop joint (a joint consisting of a first and second lollipop object), but the framework works with any (object complex) joint with a finite number of objects:
 ```Scala
 val dataGroup = ui.createGroup("datasets")
 
@@ -54,7 +54,7 @@ val dataGroup = ui.createGroup("datasets")
 ```
 
 <!-- ## Bringing data to a reference frame:
-We can see that the humeri and scapulae are distributed in space, however, these relative positions are not the physiological relative positions. They are due to the acquisition protocol, for example you can have the humerus of the same patient in the same (physiological) pose in different positions in space. We need to solve this problem by aligning all the scapulae to a reference rotational scapula and then applying the same rigid transformations to the scapula. This allows all the scapulae to be aligned while maintaining the spatial relationship between each scapula and the humerus, which is the pose variation that we want to model.
+We can see that the first and second objects are distributed in space, however, these relative positions are not the physiological relative positions. They are due to the acquisition protocol, for example you can have the humerus of the same patient in the same (physiological) pose in different positions in space. We need to solve this problem by aligning all the scapulae to a reference rotational scapula and then applying the same rigid transformations to the scapula. This allows all the scapulae to be aligned while maintaining the spatial relationship between each scapula and the humerus, which is the pose variation that we want to model.
 
 
 ```Scala
@@ -94,7 +94,9 @@ val (alignedMeshes, alignedRotCenters, meshViews, rotCenterViews) = for (i<- 0 t
   -->
  Exercise: find the rotation angles (Euler's angles) of some humeri (hemeri brought to the reference frame) with respect to the first humerus mesh in the dataset.
 ## Computing logarithmic functions from data
- Similar to [Single shape and pose models] (tutorial4.md), to study shape variations, we need to extract shape and pose variations. This is achiveved by selecting two of the meshes (scapula and humerus) as a references to create a [Multiple object structures](tutorial1.md), then use the reference to compute the [logarithimc mapping](tutorial3.md). The logaritmic map use to compute a seqquence of shared deformation fields (containing shape and pose fature for both objects) over which the Gaussian proces will be computed. This is simply done by computing a logarithmin defromation fields  for MultibodyObject[_3D, TriangleMesh]  structures created from the rest of the datasets.
+ As with [Single shape and pose models] (tutorial4.md), to study shape variations we need to extract shape and pose variations. This is done by selecting two of the meshes (first and second objects) as references to create [Multiple Object Structures] (tutorial1.md), and then using the reference to calculate the [Logarithmic Mapping] (tutorial3.md). The logarithmic map is used to compute a sequence of shared deformation fields (containing the shape and posture of both objects) over which the Gaussian process will be computed. This is done simply by calculating a logarithm of the deformation fields for the MultibodyObject[_3D, TriangleMesh] structures created from the rest of the datasets.
+
+Translated with www.DeepL.com/Translator (free version)
  
  ```Scala
    val firstObjectReference=dataFiles.head._1(0)
@@ -125,21 +127,20 @@ val (alignedMeshes, alignedRotCenters, meshViews, rotCenterViews) = for (i<- 0 t
     }
 
  ```
-   Note that the deformation fields can be be interpolated through nearest-neighbourhood interpolation to make sure that they are defined on all the points of the reference mesh. 
+   Note that the deformation fields can be interpolated by nearest-neighbour interpolation to ensure that they are defined on all points of the reference mesh. 
    
   ```Scala
  val continuousFields = defFields.map(f => f.interpolate(NearestNeighborInterpolator()))
  ```  
  
  ## Building of shape and pose models of multiple object families
-  Now that these shape and pose variations are projected into tangent (vector) space at the reference MultibodyObject using logathimic mapping, learning the shape and pose variations for multple object family from these deformation fields is done using a PGA.
- 
+  Now that these shape and pose variations are projected into the tangent (vector) space of the reference multibody object using logathimic mapping, the learning of shape and pose variations for the multibody object family from these deformation fields is performed using a PGA.
 
 ```Scala
  val multiBodyShapeAndPosePGA = MultiBodyShapeAndPosePGA(defFields,expLog)
 ```
 ## Sampling of shape and pose model of multiple object families
- We can retrieve random samples of meshes and rotation centers from the model by calling sample on the Gaussian process:
+ We can recover random samples of meshes and centres of rotation from the model by calling the sample on the Gaussian process:
  
 ```Scala
     val sample=multiBodyShapeAndPosePGA.sample()
@@ -155,9 +156,9 @@ val (alignedMeshes, alignedRotCenters, meshViews, rotCenterViews) = for (i<- 0 t
 ```
 ## Marginalise model of shape and pose of multiple object famlies
  
- One would like to obtain the shape model only or the pose model only. 
- The marginalisation property of a Gaussian process allows to obtain the distribution for a specific feature class. [Single shape ad pose  models](tutorial4.md)  is calculated by specifying the erefence of the specifi object family, from shape models and shape cane be computed as discussied in [tutorial 4](tutorial.md).
- We can obtain this distribution, by calling the marginal method on the model. We compute the shape and pose model of the humerus.
+One wishes to obtain the shape model only or the pose model only. 
+ The marginalisation property of a Gaussian process is used to obtain the distribution for a specific feature class. The [shape and pose model](tutorial4.md) is computed by specifying the origin of the specific object family, from the shape and pose models can be computed as discussed in [tutorial 4](tutorial.md).
+ We can obtain this distribution, by calling the marginal method on the model. We calculate the shape and pose model of the second object.
  
  ```Scala
     val referenceDomainWithPoseParam=DomainWithPoseParameters(secondObjectReference,
@@ -171,7 +172,7 @@ val (alignedMeshes, alignedRotCenters, meshViews, rotCenterViews) = for (i<- 0 t
     val secondObjectSample:TriangleMesh[_3D]=singleObjectsample.domain
     ui.show(secondObjectSample, "secondObjectSample transition model")
  ```
-## Posterior model of shape and pose of multiple object famlies
+## Posterior model of shape and pose of multiple object families
 
 Similar ot the posterior model in [tutorial 4] (tutorial4.md), let us use Gaussian processes for regression tasks for models of shape and pose of multiple object falimies.The framework also allows regression to any of the features included in the domain. One of the practical applications of this regression is to constrain a model at the desired relative pose as well as the reconstruction of a partial shape. To calculate the regression, the Gaussian process model assumes that deformation is only observed up to a certain uncertainty, which can be modelled by a normal distribution. The observed data is specified in terms of points and their identifiers.
 ```Scala
