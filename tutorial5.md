@@ -5,14 +5,12 @@ The objective of this tutorial is to learn how to build a shape and pose model f
 #Preparation
 As in the previous tutorials, we start by importing some commonly used objects and initializing the system.
 ```Scala
-import java.io.File
-import breeze.linalg.DenseVector
-import multobjectmodels._
-import scalismo.common._
+import ShapeAndPoseModels._
+import scalismo.common.{DiscreteField, PointId}
+import scalismo.common.interpolation.NearestNeighborInterpolator
 import scalismo.geometry._
 import scalismo.io.{LandmarkIO, MeshIO}
 import scalismo.mesh.TriangleMesh
-import scalismo.mesh.TriangleMesh.domainWarp3D
 import scalismo.transformations.Translation
 import scalismo.ui.api.ScalismoUI
 
