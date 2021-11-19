@@ -103,11 +103,11 @@ val sample=shapeAndPoseModel.sample()
  val MarginalshapeModel: PointDistributionModel[_3D, TriangleMesh]=shapeAndPoseModel.shapePDM
  val MarginalPoseFromShapeAndPose: ShapeAndPosePDM[TriangleMesh]=shapeAndPoseModel.PosePGA
  ```
-## Single shape ad pose  model posterior
+<!-- ## Single shape ad pose  model posterior
 
 Let us now use Gaussian processes for regression tasks and experiment with the concept of posterior shape and pose models.  This shows how these tools can be applied to construct a partial shape reconstruction as well as pose estimation from shape observation. Since the ShapeAndPosePDM is simply a wrapper around a GP, similar to [Posterior shape models](https://scalismo.org/docs/tutorials/tutorial8), the same posterior functionality is available for shape and pose models. To calculate the regression, the Gaussian process model assumes that deformation is only observed up to a certain uncertainty, which can be modelled by a normal distribution. The observed data is specified in terms of points and their identifiers.
 ```Scala
   val littleNoise=0.2 // variance of the Gaussian noise N(0,0.2)
   val observedData:IndexedSeq[(PointId, Point[_3D])]= ???
   val ShapeAndPosePosterior: ShapeAndPosePDM[TriangleMesh] = shapeAndPoseModel.posterior(observedData,littleNoise)
-```
+``` -->
