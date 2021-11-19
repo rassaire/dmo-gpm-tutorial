@@ -67,17 +67,17 @@ Let us load ([download here](https://www.dropbox.com/s/t592zkjg9tu06xz/LollipopD
 
     }
  ```
-   Note that the deformation fields can be be interpolated through nearest-neighbourhood interpolation to make sure that they are defined on all the points of the reference mesh. 
+  Note that the deformation fields can be interpolated by nearest-neighbour interpolation to ensure that they are defined on all points of the reference mesh. 
   ```Scala
  val continuousFields = defFields.map(f => f.interpolate(NearestNeighborInterpolator()))
  ```  
  
  ## Single shape and pose model building
-  Now that these shape and pose variations are projected into tangent (vector) space at the reference using logathimic mapping, learning the shape and pose variations from these deformation fields is done using a PCA. This is essentially the PGA, which is the PCA in tangent space. The model is compouted using the ```ShapeAndPosePDM``` class.
+  Now that these shape and pose variations are projected into the tangent (vector) space of the reference using logathimic mapping, learning the shape and pose variations from these deformation fields is done using a PCA. This is essentially the PGA, which is the PCA in tangent space. The model is compiled using the ``ShapeAndPosePDM`` class.
  
 
 ```Scala
-val shapeAndPoseModel: ShapeAndPosePDM[TriangleMesh] = ShapeAndPosePDM(defFields,singleExpLog)
+val shapeAndPoseModel: ShapeAndPosePGA[TriangleMesh] = ShapeAndPosePGA(defFields,singleExpLog)
 ```
 ## Single shape and pose model sampling
 
@@ -85,16 +85,20 @@ val shapeAndPoseModel: ShapeAndPosePDM[TriangleMesh] = ShapeAndPosePDM(defFields
  
 ```Scala
 val sample=shapeAndPoseModel.sample()
-val randomMeshSample:TriangleMesh[_3D]=sample.domain
-val randomRotCent:Point[_3D]=sample.rotCenter
-ui.show(randomMeshSample, "randomMeshSample")
-ui.show(Seq(Landmark[_3D]("",randomRotCent)), "randomRotCent")
+    val randomMeshSample:TriangleMesh[_3D]=sample.domain
+    val randomRotCent:Point[_3D]=sample.rotCenter
+    ui.show(randomMeshSample, "randomMeshSample")
+    ui.show(Seq(Landmark[_3D]("",randomRotCent)), "randomRotCent")
+
+    //Single shape and pose model marginalisation
+    val MarginalshapeModel: PointDistributionModel[_3D, TriangleMesh]=shapeAndPoseModel.shapePDM
+    val MarginalPoseFromShapeAndPose: ShapeAndPosePGA[TriangleMesh]=shapeAndPoseModel.PosePGA
 ```
 ## Single shape and pose model marginalisation
  
- One would like to obtain the shape model only or the pose model only. 
- The marginalisation property of a Gaussian process allows to obtain the distribution for a specific feature class. The shape model is calculated as a point distribution model, while the pose model is again a ShapeAndPose  model, but with the shape set to the mean shape.
- We can obtain this distribution, by calling the marginal method on the model:
+  One wishes to obtain the shape model only or the pose model only. 
+ The marginalisation property of a Gaussian process allows to obtain the distribution for a specific class of features. The shape model is calculated as a point distribution model, while the pose model is again a ```ShapeAndPoseModel```, but with the shape set to the mean shape.
+ We can obtain this distribution, by calling the marginal method on the model :
  ```Scala
  val MarginalshapeModel: PointDistributionModel[_3D, TriangleMesh]=shapeAndPoseModel.shapePDM
  val MarginalPoseFromShapeAndPose: ShapeAndPosePDM[TriangleMesh]=shapeAndPoseModel.PosePGA
