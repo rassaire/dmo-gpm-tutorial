@@ -26,35 +26,34 @@ Let's load (and visualise) a set of humerus and scapula meshes from which we wis
 ```Scala
 val dataGroup = ui.createGroup("datasets")
 
-val humerusMeshFiles = new java.io.File("path/humeri/").listFiles
-val scapulaMeshFiles = new java.io.File("path/humeri/").listFiles
+  val firstObjectMeshFiles = new java.io.File("").listFiles
+  val secondObjectMeshFiles = new java.io.File("").listFiles
 
-val humerusRotationCenterFiles = new java.io.File("path/humeri/").listFiles
-val sacpulaRotationCenterFiles = new java.io.File("path/humeri/").listFiles
+  val firstObjectRotationCenterFiles = new java.io.File("").listFiles
+  val secondObjectRotationCenterFiles = new java.io.File("").listFiles
 
-val (meshes, rotCenters, meshViews, rotCenterViews) = for (i<- 0 to meshFiles.size-1) yield {
-  val scapulaMesh = MeshIO.readMesh(scapulaMeshFile(i)).get
-  val humerusMesh = MeshIO.readMesh(humerusMeshFile(i)).get
-  
-  val scapulaRotcent=LandmarkIO.readLandmarksJson[_3D](scapulaRotationCenterFiles(i)).get
-  val humerusRotcent=LandmarkIO.readLandmarksJson[_3D](humerusRotationCenterFiles(i)).get
-  
-  val scapulameshView = ui.show(dsGroup, scapulamesh, "scapulaMesh")
-  val humerusmeshView = ui.show(dsGroup, humerusmesh, "humerusMesh")
-  
-  val scapularotCentView = ui.show(dsGroup,scapulaRotcent, "scapulaRotcent")
-  val humerusrotCentView = ui.show(dsGroup,humerusRotcent, "humerusRotcent")
-  
-  (List(scapulaMesh, humerusMesh), 
-  List(scapulaRotCent, humerusRotCent), 
-  List(scapulaMeshView,humerusMeshView),
-  List(scapulaRotCentView,humerusRotCentView)
-  ) // return a tuple of the mesh and roation centers with their associated view
-}) .unzip // take the tuples apart, to get a sequence of meshes and rotation centers as well as one of Views
+  val dataFiles = for (i<- 0 to firstObjectMeshFiles.size-1) yield {
+    val firstObjectMesh = MeshIO.readMesh(firstObjectMeshFiles(i)).get
+    val secondObjectMesh = MeshIO.readMesh(secondObjectMeshFiles(i)).get
 
+    val firstObjectRotCent=LandmarkIO.readLandmarksJson[_3D](firstObjectRotationCenterFiles(i)).get
+    val secondObjectRotCent=LandmarkIO.readLandmarksJson[_3D](secondObjectRotationCenterFiles(i)).get
+
+    val firstObjectMeshView = ui.show(dataGroup, firstObjectMesh, "firstObjectMesh"+i)
+    val secondObjectMeshView = ui.show(dataGroup, secondObjectMesh, "secondObjectMesh"+i)
+
+    val firstObjectRotCentView = ui.show(dataGroup,firstObjectRotCent, "firstObjectRotCent")
+    val secondObjectRotCentView = ui.show(dataGroup,secondObjectRotCent, "secondObjectRotCent")
+
+    (List(firstObjectMesh, secondObjectMesh),
+      List(firstObjectRotCent.head.point, secondObjectRotCent.head.point),
+      List(firstObjectMeshView,secondObjectMeshView),
+      List(firstObjectRotCentView,secondObjectRotCentView)
+    ) // return a tuple of the mesh and roation centers with their associated view
+  }
 ```
 
-## Bringing data to a reference frame:
+<!-- ## Bringing data to a reference frame:
 We can see that the humeri and scapulae are distributed in space, however, these relative positions are not the physiological relative positions. They are due to the acquisition protocol, for example you can have the humerus of the same patient in the same (physiological) pose in different positions in space. We need to solve this problem by aligning all the scapulae to a reference rotational scapula and then applying the same rigid transformations to the scapula. This allows all the scapulae to be aligned while maintaining the spatial relationship between each scapula and the humerus, which is the pose variation that we want to model.
 
 
@@ -92,37 +91,37 @@ val (alignedMeshes, alignedRotCenters, meshViews, rotCenterViews) = for (i<- 0 t
 
 ```
  You can see that joint meshes (couple scapula and humerus) have changed positions while keeping their relative postion. 
- 
+  -->
  Exercise: find the rotation angles (Euler's angles) of some humeri (hemeri brought to the reference frame) with respect to the first humerus mesh in the dataset.
 ## Computing logarithmic functions from data
  Similar to [Single shape and pose models] (tutorial4.md), to study shape variations, we need to extract shape and pose variations. This is achiveved by selecting two of the meshes (scapula and humerus) as a references to create a [Multiple object structures](tutorial1.md), then use the reference to compute the [logarithimc mapping](tutorial3.md). The logaritmic map use to compute a seqquence of shared deformation fields (containing shape and pose fature for both objects) over which the Gaussian proces will be computed. This is simply done by computing a logarithmin defromation fields  for MultibodyObject[_3D, TriangleMesh]  structures created from the rest of the datasets.
  
  ```Scala
-val referenceScapula=meshes(0)._1(0).head
-val referenceHumerus=meshes(0)._1(1).head
-val refRotCentScapula=rotCenters(0)._2(0).head.point
-val refRotCentHumerus=rotCenters(0)._2(1).head.point
+   val firstObjectReference=dataFiles.head._1(0)
+    val secondObjectReference=dataFiles.head._1(1)
+    val firstObjectRotCentRef=dataFiles.head._2(0)
+    val secondObjectRotCentRef=dataFiles.head._2(1)
 
-val referenceMultibodyObject:MultibodyObject[_3D, TriangleMesh] = MultibodyObject(
-      List(referenceScapula,referenceHumerus),
-      List(refRotCentScapula,refRotCentHumerus),
-      List(Translation(EuclideanVector3D(0.0, 0.1, 0.0))(refRotCentScapula,Translation(EuclideanVector3D(0.0, 0.1, 0.0))(refRotCentHumerus)
-      
-    )
+    val referenceMultibodyObject: MultiBodyObject[_3D, TriangleMesh] =  MultiBodyObject(
+      List(firstObjectReference,secondObjectReference),
+      List(firstObjectRotCentRef,secondObjectRotCentRef),
+      List(Translation(EuclideanVector3D(0.0, 0.1, 0.0)).apply(firstObjectRotCentRef),Translation(EuclideanVector3D(0.0, 0.1, 0.0)).apply(secondObjectRotCentRef))
 
-val expLog=MultiobjectPoseExpLogMapping(referenceMultibodyObject)
+      )
 
-val defFields = for (i <- 0 to meshes - 1) yield {
+    val expLog=MultiObjectPoseExpLogMapping(referenceMultibodyObject)
+
+    val defFields = for (i <- 0 to dataFiles.size - 1) yield {
 
       val targMultiBody=
-      MultibodyObject(meshes(i)._1,
-       meshes(i)._2,
-       meshes(i)._2
-          )
+        MultiBodyObject(dataFiles(i)._1,
+          dataFiles(i)._2,
+          dataFiles(i)._2
+        )
 
- val df = DiscreteField[_3D, MultibodyObject[_3D, TriangleMesh]#DomainT, EuclideanVector[_3D]](referenceMultibodyObject, referenceMultibodyObject.pointSet.pointsWithId.toIndexedSeq.map(pt => targMultiBody.pointSet.point(pt._2) - pt._1))
+      val df = DiscreteField[_3D, MultiBodyObject[_3D, TriangleMesh]#DomainT, EuclideanVector[_3D]](referenceMultibodyObject, referenceMultibodyObject.pointSet.pointsWithId.toIndexedSeq.map(pt => targMultiBody.pointSet.point(pt._2) - pt._1))
 
-expLog.logMapping(df)
+      expLog.logMapping(df)
     }
 
  ```
@@ -137,21 +136,22 @@ expLog.logMapping(df)
  
 
 ```Scala
-val MultiBodyShapeAndPosePGA = MultibodyShapeAndPosePDM(df,expLog)
+ val multiBodyShapeAndPosePGA = MultiBodyShapeAndPosePGA(defFields,expLog)
 ```
 ## Sampling of shape and pose model of multiple object families
  We can retrieve random samples of meshes and rotation centers from the model by calling sample on the Gaussian process:
  
 ```Scala
-val sample=MultiBodyShapeAndPosePGA.sample()
-val randomMeshScaoulaSample:TriangleMesh[_3D]=sample.objects(0)
-val randomMeshHumerusSample:TriangleMesh[_3D]=sample.objects(1)
-val randomRotCentScapula:Point[_3D]=sample.rotCenters(0)
-val randomRotCentHumerus:Point[_3D]=sample.rotCenters(0)
-ui.show(randomMeshScapulaSample, "randomMeshScapulaSample")
-ui.show(randomMeshHumerusSample, "randomMeshHumerusSample")
-ui.show(Seq(Landmark[_3D]("scapula",randomRotCentSample)), "randomRotCentSample")
-ui.show(Seq(Landmark[_3D]("humerus",randomRotCentSample)), "randomRotCentHumerus")
+    val sample=multiBodyShapeAndPosePGA.sample()
+    val randomFirstObjectSample:TriangleMesh[_3D]=sample.objects(0)
+    val randomSecondObjectSample:TriangleMesh[_3D]=sample.objects(1)
+    val randomFirstObjectRotCent:Point[_3D]=sample.rotationCenters(0)
+    val randomSecondObjectRotCent:Point[_3D]=sample.rotationCenters(1)
+
+    ui.show(randomFirstObjectSample, "randomFirstObjectSample")
+    ui.show(randomSecondObjectSample, "randomSecondObjectSample")
+    ui.show(Seq(Landmark[_3D]("scapula",randomFirstObjectRotCent)), "randomFirstObjectRotCent")
+    ui.show(Seq(Landmark[_3D]("humerus",randomSecondObjectRotCent)), "randomSecondObjectRotCent")
 ```
 ## Marginalise model of shape and pose of multiple object famlies
  
@@ -160,7 +160,16 @@ ui.show(Seq(Landmark[_3D]("humerus",randomRotCentSample)), "randomRotCentHumerus
  We can obtain this distribution, by calling the marginal method on the model. We compute the shape and pose model of the humerus.
  
  ```Scala
- val ShapeAndPose:ShapeAndPosePDM[Traingle]=MultiBodyShapeAndPosePGA.transitionToSingleObject(referenceHumerus)
+    val referenceDomainWithPoseParam=DomainWithPoseParameters(secondObjectReference,
+      secondObjectRotCentRef,
+      Translation(EuclideanVector3D(0.0, 0.1, 0.0)).apply(secondObjectRotCentRef)
+    )
+
+    val secondObjectTransitionModel:ShapeAndPosePGA[TriangleMesh]=multiBodyShapeAndPosePGA.transitionToSingleObject(referenceDomainWithPoseParam)
+
+    val singleObjectsample=secondObjectTransitionModel.sample()
+    val secondObjectSample:TriangleMesh[_3D]=singleObjectsample.domain
+    ui.show(secondObjectSample, "secondObjectSample transition model")
  ```
 ## Posterior model of shape and pose of multiple object famlies
 
