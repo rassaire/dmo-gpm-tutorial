@@ -163,7 +163,9 @@ One wishes to obtain the shape model only or the pose model only.
       Translation(EuclideanVector3D(0.0, 0.1, 0.0)).apply(secondObjectRotCentRef)
     )
 
-    val secondObjectTransitionModel:ShapeAndPosePGA[TriangleMesh]=multiBodyShapeAndPosePGA.transitionToSingleObject(referenceDomainWithPoseParam)
+    val singleExpLog=SinglePoseExpLogMapping(referenceDomainWithPoseParam)
+    val secondObjectTransitionModel:ShapeAndPosePGA[TriangleMesh]=multiBodyShapeAndPosePGA.transitionToSingleObject(referenceDomainWithPoseParam,singleExpLog)
+
 
     val singleObjectsample=secondObjectTransitionModel.sample()
     val secondObjectSample:TriangleMesh[_3D]=singleObjectsample.domain
