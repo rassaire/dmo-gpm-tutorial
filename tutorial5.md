@@ -173,10 +173,10 @@ One wishes to obtain the shape model only or the pose model only.
  ```
 ## Posterior model of shape and pose of multiple object families
 
-Similar to the posterior model in [tutorial 4](tutorial4.md), we use Gaussian processes for the regression tasks for shape models and multiple object families. The framework also allows regression to any feature included in the domain. One practical application of this regression is to constrain a model to the desired relative pose as well as the reconstruction of a partial shape. To calculate the regression, the Gaussian process model assumes that deformation is only observed up to a certain uncertainty, which can be modelled by a normal distribution. The observed data is specified in terms of points and their identifiers.
+Similar to the posterior model in [tutorial 4](tutorial4.md), we use Gaussian processes for the regression tasks for shape models and multiple object families. The framework also allows regression to any feature included in the domain. One practical application of this regression is to constrain a model to the desired relative pose as well as the reconstruction of a partial shape. To calculate the regression, the Gaussian process model assumes that deformation is only observed up to a certain uncertainty, which can be modelled by a normal distribution. The observed data is specified in terms of points and their identifiers. In the example below, we assume that the joint shape in the third position in the training data is observed and compute the posterior model (pose model).
 
 ```Scala
-val littleNoise=0.2 // variance of the Gaussian noise N(0,0.2)
-val observedData = IndexedSeq((PointId, Point[_3D]))
-val MultiBodyShapeAndPosePosterior: MultibodyShapeAndPosePDM[TriangleMesh] = MultibodyShapeAndPosePDM.posterior(observedData,littleNoise)
+  val littleNoise=0.2 // variance of the Gaussian noise N(0,0.2)
+  val observedData :List[IndexedSeq[(PointId, Point[_3D])]]=List(defFields(2).valuesWithIds.map(v=>(v._2,v._1.shapeVec.toPoint)).toIndexedSeq)//getting the shape of third joint
+  val MultiBodyShapeAndPosePosterior: MultiBodyShapeAndPosePGA[TriangleMesh] = multiBodyShapeAndPosePGA.posterior(observedData,littleNoise)
 ```
