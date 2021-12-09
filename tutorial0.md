@@ -1,6 +1,6 @@
 
 To run the code in the tutorials, once you have set up [Using Scalismo](https://scalismo.org/docs/):
--add thsi to your build.sbt file:
+- add thsi to your build.sbt file:
 resolvers ++= Seq(
 ``` Scala
   Opts.resolver.sonatypeSnapshots,
