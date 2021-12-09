@@ -21,6 +21,6 @@ libraryDependencies  ++= Seq(
 
 )
 ```
-Alternatively, downlaod this  project ( https://github.com/rassaire).
-you can open the project using  intelliJ IDE (here are some references : [Getting started with Scalismo in IntelliJ IDEA](https://scalismo.org/docs/ide)).
+Alternatively, downlaod this  project ( https://github.com/rassaire). 
+You can open the project using  intelliJ IDE (here are some references : [Getting started with Scalismo in IntelliJ IDEA](https://scalismo.org/docs/ide)).
 - run the code in the tutorials.
