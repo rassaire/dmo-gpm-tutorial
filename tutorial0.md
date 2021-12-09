@@ -21,6 +21,6 @@ libraryDependencies  ++= Seq(
 
 )
 ```
-Alternatively, downlaod this  project ( [tutorial project](https://www.dropbox.com/s/f6d9cug2o23qyh6/dmfc-gpm-tutorial-project.zip?dl=0). 
+Alternatively, downlaod this  project ( [tutorial project](https://www.dropbox.com/s/f6d9cug2o23qyh6/dmfc-gpm-tutorial-project.zip?dl=0)). 
 You can open the project using  intelliJ IDE (here are some references : [Getting started with Scalismo in IntelliJ IDEA](https://scalismo.org/docs/ide)).
 - run the code in the tutorials.
