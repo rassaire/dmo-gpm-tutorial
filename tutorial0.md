@@ -1,7 +1,7 @@
 
 To run the code in the tutorials, once you have set up [Using Scalismo](https://scalismo.org/docs/):
 - add this to your build.sbt file:
-
+- here
 ```Scala
 resolvers ++= Seq(
   Opts.resolver.sonatypeSnapshots,
