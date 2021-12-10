@@ -6,5 +6,5 @@ This project aims to provide easy access to the framework for modelling multiple
 Below is a demo for the shoulder.
 
 <p align="center">
-<img src="new dmo_animation+JRF.gif" width="60%" hight="50%">
+<img src="DMFC-GPM-demo.gif" width="60%" hight="50%">
 </p>
