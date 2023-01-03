@@ -23,7 +23,7 @@ libraryDependencies  ++= Seq(
 
 )
 ```
-Alternatively, downlaod this  project ([tutorial project](https://www.dropbox.com/s/f6d9cug2o23qyh6/dmfc-gpm-tutorial-project.zip?dl=0)). 
+Alternatively, downlaod the [tutorial project](https://www.dropbox.com/s/f6d9cug2o23qyh6/dmfc-gpm-tutorial-project.zip?dl=0)). 
 
 
 - Second option: Clone the project from github
