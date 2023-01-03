@@ -27,6 +27,7 @@ Alternatively, downlaod this  project ([tutorial project](https://www.dropbox.co
 
 
 - Second option: Clone the project from github
+- -
 [Clone the project](https://github.com/rassaire/Dmfc-gpm)
 
 You can open the project using  intelliJ IDE (here are some references : [Getting started with Scalismo in IntelliJ IDEA](https://scalismo.org/docs/ide)).
