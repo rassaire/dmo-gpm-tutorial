@@ -31,4 +31,4 @@ Alternatively, downlaod this  project ([tutorial project](https://www.dropbox.co
 [Clone the project](https://github.com/rassaire/Dmfc-gpm)
 
 You can open the project using  intelliJ IDE (here are some references : [Getting started with Scalismo in IntelliJ IDEA](https://scalismo.org/docs/ide)).
-- run the code in the tutorials.
+- Run the code in the tutorials or use it on your own dataset.
